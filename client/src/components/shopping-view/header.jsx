@@ -1,9 +1,7 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import {
   Link,
-  // useLocation,
   useNavigate,
-  // useSearchParams,
 } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -19,18 +17,17 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { logoutUser } from "@/store/auth-slice";
-import UserCartWrapper from "./cart-wrapper";
 import { useEffect, useState } from "react";
-import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
 
 function MenuItems() {
+  // const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
-          // onClick={() => handleNavigate(menuItem)}
+          onClick={() => handleNavigate(menuItem)}
           className="text-sm font-medium cursor-pointer"
           key={menuItem.id}
         >
@@ -71,14 +68,14 @@ function HeaderRightContent() {
           </span>
           <span className="sr-only">User cart</span>
         </Button>
-        <UserCartWrapper
+        {/* <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
           cartItems={
             cartItems && cartItems.items && cartItems.items.length > 0
               ? cartItems.items
               : []
           }
-        />
+        /> */}
       </Sheet>
 
       <DropdownMenu>
@@ -138,5 +135,5 @@ function ShoppingHeader() {
     </header>
   );
 }
-  
-export default ShoppingHeader;  
+
+export default ShoppingHeader;
