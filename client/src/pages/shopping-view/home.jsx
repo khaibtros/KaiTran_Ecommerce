@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -43,6 +44,7 @@ function ShoppingHome() {
     (state) => state.shopProducts
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const slides = [bannerOne, bannerTwo, bannerThree];
 
