@@ -22,7 +22,18 @@ const categoriesWithIcon = [
 ];
 
 function ShoppingHome() {
-  const slides = [bannerOne, bannerTwo, bannerThree]
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [bannerOne, bannerTwo, bannerThree];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    }, 15000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -31,12 +42,21 @@ function ShoppingHome() {
           <img
             src={slide}
             key={index}
-            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+            className={`${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
           />
         ))}
         <Button
           variant="outline"
           size="icon"
+          onClick={() =>
+            setCurrentSlide(
+              (prevSlide) =>
+                (prevSlide - 1 + slides.length) %
+                slides.length
+            )
+          }
           className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
         >
           <ChevronLeftIcon className="w-4 h-4" />
@@ -44,6 +64,11 @@ function ShoppingHome() {
         <Button
           variant="outline"
           size="icon"
+          onClick={() =>
+            setCurrentSlide(
+              (prevSlide) => (prevSlide + 1) % slides.length
+            )
+          }
           className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
         >
           <ChevronRightIcon className="w-4 h-4" />
