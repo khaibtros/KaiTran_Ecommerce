@@ -18,6 +18,12 @@ function Address() {
     event.preventDefault();
   }
 
+  function isFormValid() {
+    return Object.keys(formData)
+      .map((key) => formData[key].trim() !== "")
+      .every((item) => item);
+  }
+
   return (
     <Card>
       <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
@@ -35,6 +41,7 @@ function Address() {
           setFormData={setFormData}
           buttonText={"Add"}
           onSubmit={handleManageAddress}
+          isBtnDisabled={!isFormValid()}
         />
       </CardContent>
     </Card>
