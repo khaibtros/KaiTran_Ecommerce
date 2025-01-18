@@ -42,6 +42,19 @@ function Address() {
     });
   }
 
+  function handleDeleteAddress(getCurrentAddress) {
+    dispatch(
+      deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchAllAddresses(user?.id));
+        toast({
+          title: "Address deleted successfully",
+        });
+      }
+    });
+  }
+
   function isFormValid() {
     return Object.keys(formData)
       .map((key) => formData[key].trim() !== "")
@@ -58,7 +71,9 @@ function Address() {
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               <AddressCard
-                addressInfo={singleAddressItem}
+              handleDeleteAddress={handleDeleteAddress}
+              addressInfo={singleAddressItem}
+              handleEditAddress={handleEditAddress}
               />
             ))
           : null}

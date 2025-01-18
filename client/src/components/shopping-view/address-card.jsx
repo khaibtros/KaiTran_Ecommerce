@@ -3,7 +3,9 @@ import { Card, CardContent } from "../ui/card";
 import { Label } from "../ui/label";
 
 function AddressCard({
-  addressInfo
+  addressInfo,
+  handleEditAddress,
+  handleDeleteAddress
 }) {
   return (
     <Card>
@@ -14,6 +16,10 @@ function AddressCard({
         <Label>Phone: {addressInfo?.phone}</Label>
         <Label>Notes: {addressInfo?.notes}</Label>
       </CardContent>
+      <CardFooter className="p-3 flex justify-between">
+        <Button onClick={() => handleEditAddress(addressInfo)}>Edit</Button>
+        <Button onClick={() => handleDeleteAddress(addressInfo)}>Delete</Button>
+      </CardFooter>
     </Card>
   );
 }
