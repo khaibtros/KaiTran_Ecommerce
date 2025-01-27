@@ -27,8 +27,9 @@ import {
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
+import { getFeatureImages } from "@/store/common-slice";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -46,12 +47,13 @@ const brandsWithIcon = [
   { id: "zara", label: "Zara", icon: Images },
   { id: "h&m", label: "H&M", icon: Heater },
 ];
-
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+  const { featureImageList } = useSelector((state) => state.commonFeature);
+
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
@@ -59,8 +61,6 @@ function ShoppingHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const slides = [bannerOne, bannerTwo, bannerThree];
 
   function handleNavigateToListingPage(getCurrentItem, section) {
     sessionStorage.removeItem("filters");
@@ -99,11 +99,11 @@ function ShoppingHome() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
     }, 15000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [featureImageList]);
 
   useEffect(() => {
     dispatch(
@@ -114,25 +114,34 @@ function ShoppingHome() {
     );
   }, [dispatch]);
 
+  console.log(productList, "productList");
+
+  useEffect(() => {
+    dispatch(getFeatureImages());
+  }, [dispatch]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden">
-        {slides.map((slide, index) => (
-          <img
-            src={slide}
-            key={index}
-            className={`${index === currentSlide ? "opacity-100" : "opacity-0"
-              } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
-          />
-        ))}
+        {featureImageList && featureImageList.length > 0
+          ? featureImageList.map((slide, index) => (
+              <img
+                src={slide?.image}
+                key={index}
+                className={`${
+                  index === currentSlide ? "opacity-100" : "opacity-0"
+                } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+              />
+            ))
+          : null}
         <Button
           variant="outline"
           size="icon"
           onClick={() =>
             setCurrentSlide(
               (prevSlide) =>
-                (prevSlide - 1 + slides.length) %
-                slides.length
+                (prevSlide - 1 + featureImageList.length) %
+                featureImageList.length
             )
           }
           className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
@@ -144,7 +153,7 @@ function ShoppingHome() {
           size="icon"
           onClick={() =>
             setCurrentSlide(
-              (prevSlide) => (prevSlide + 1) % slides.length
+              (prevSlide) => (prevSlide + 1) % featureImageList.length
             )
           }
           className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
@@ -202,12 +211,12 @@ function ShoppingHome() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {productList && productList.length > 0
               ? productList.map((productItem) => (
-                <ShoppingProductTile
-                  handleGetProductDetails={handleGetProductDetails}
-                  product={productItem}
-                  handleAddtoCart={handleAddtoCart}
-                />
-              ))
+                  <ShoppingProductTile
+                    handleGetProductDetails={handleGetProductDetails}
+                    product={productItem}
+                    handleAddtoCart={handleAddtoCart}
+                  />
+                ))
               : null}
           </div>
         </div>
